@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MenuListManager : MonoBehaviour
 {
@@ -13,8 +14,12 @@ public class MenuListManager : MonoBehaviour
         public int seconds;
     }
     public List<MenuData> menuList = new List<MenuData>();
-    public GameObject menuButtonPrefab;
+    public GameObject menuBtnPrefab;
+    public Button menuBtn;
     public Transform menuButtonParent;
+    public GameObject menuPanel;
+    private bool menuVisible = false;
+
     private void Awake()
     {
         if (Instance != null)
@@ -24,6 +29,9 @@ public class MenuListManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        menuBtn.onClick.AddListener(MenuListBtnClick);
+
+
     }
     private void Start()
     {
@@ -34,9 +42,15 @@ public class MenuListManager : MonoBehaviour
     {
         foreach (var menu in menuList)
         {
-            GameObject buttonObj = Instantiate(menuButtonPrefab, menuButtonParent);
+            GameObject buttonObj = Instantiate(menuBtnPrefab, menuButtonParent);
             MenuButton menuButton = buttonObj.GetComponent<MenuButton>();
             menuButton.Setup(menu.menuName, menu.minutes, menu.seconds);
         }
+        menuPanel.SetActive(false);
+    }
+    private void MenuListBtnClick()
+    {
+        menuVisible = !menuVisible;
+        menuPanel.SetActive(menuVisible);
     }
 }
